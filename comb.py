@@ -19,8 +19,21 @@ class Result:
 
 
 class Parser:
-    def __call__(self, tokens, pos):
-        return None
+    def __add__(self, other):
+        """parser + other"""
+        return Concat(self, other)
+
+    def __mul__(self, other):
+        """parser * other"""
+        return Exp(self, other)
+
+    def __or__(self, other):
+        """parser | other"""
+        return Alternate(self, other)
+
+    def __xor__(self, func):
+        """parser ^ function"""
+        return Process(self, func)
 
 
 class Reserved(Parser):
@@ -61,8 +74,7 @@ class Concat(Parser):
             if right_result:
                 combined_value = (left_result.value, right_result.value)
                 return Result(combined_value, right_result.pos)
-
-            return None
+        return None
 
 
 class Alternate(Parser):

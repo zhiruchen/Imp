@@ -9,7 +9,7 @@ ID = "ID"  # 标识符
 
 
 token_exprs = [
-    (r'[ \n\t]+',              None),  # 空白
+    (r'[ \n\t]+', None),  # 空白
     (r'#[^\n]*',               None),  # 注释
     (r'\:=',                   RESERVED),
     (r'\(',                    RESERVED),
