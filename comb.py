@@ -17,7 +17,7 @@ class Result:
         return 'Result(%s, %d)' % (self.value, self.pos)
 
 
-class Parser:
+class Parser(object):
     def __add__(self, other):
         """parser + other"""
         return Concat(self, other)

@@ -25,7 +25,7 @@ num = Tag(INT) ^ (lambda i: int(i))
 # convert values returned by num and id into actual expressions
 # first try to parse an integer expression, if fails, then to parse a var expression
 def aexp_value():
-    return (num ^ (lambda i: IntAexp(i))) | (id ^ (lambda v: VarExp(v)))
+    return (num ^ (lambda i: IntAexp(i))) | (id ^ (lambda v: VarAexp(v)))
 
 def process_group(parsed):
     ((_, p), _) = parsed
@@ -117,4 +117,41 @@ def assign_stmt():
 
     return id + key_word(':=') + aexp() ^ process
 
+def stmt_list():
+    separator = key_word(";") ^ (lambda x: lambda l, r: CompoundStatement(l, r))
+    return Exp(stmt(), separator)
 
+def if_stmt():
+    def process(parsed):
+        (((((_, condition), _), true_stmt), false_parsed), _) = parsed
+        if false_parsed:
+            (_, false_stmt) = false_parsed
+        else:
+            false_stmt = None
+
+        return IfStatement(condition, true_stmt, false_stmt)
+
+    return key_word("if") + bexp() + \
+           key_word("then") + Lazy(stmt_list) + \
+           Opt(key_word("else") + Lazy(stmt_list)) + \
+           key_word("end") ^ process
+
+def while_stmt():
+    def process(parsed):
+        ((((_, condition), _), body), _) = parsed
+        return WhileStatement(condition, body)
+
+    return key_word("while") + bexp() + \
+           key_word("do") + Lazy(stmt_list) + \
+           key_word("end") + process
+
+def stmt():
+    return assign_stmt() | if_stmt() | while_stmt()
+
+# ------------top level definitions--------------
+def parser():
+    return Phrase(stmt_list())
+
+def imp_parser(tokens):
+    ast = parser()(tokens, 0)
+    return ast
