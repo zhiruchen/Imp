@@ -7,7 +7,6 @@ class Result:
     """
     def __init__(self, value, pos):
         """
-        
         :param value: part of ast
         :param pos: the index of next token in the token stream
         """

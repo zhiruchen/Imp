@@ -55,23 +55,21 @@ class RelopBexp(Bexp):
 
 
 class AndBexp(Bexp):
-    def __init__(self, op, left, right):
-        self.op = op
+    def __init__(self, left, right):
         self.left = left
         self.right = right
         
     def __repr__(self):
-        return "AndBexp({0}, {1}, {2})".format(self.op, self.left, self.right)
+        return "AndBexp({0}, {1})".format(self.left, self.right)
 
 
 class OrBexp(Bexp):
-    def __init__(self, op, left, right):
-        self.op = op
+    def __init__(self, left, right):
         self.left = left
         self.right = right
  
     def __repr__(self):
-        return "OrBexp({0}, {1}, {2})".format(self.op, self.left, self.right)
+        return "OrBexp({0}, {1})".format(self.left, self.right)
 
 
 class NotBexp(Bexp):
