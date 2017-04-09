@@ -64,21 +64,16 @@ def precedence(value_parser, precedence_levels, combine):
     def op_parser(precedence_level):
         """读取precedence_level中的所有字符， 返回一个组合两个表达式的函数"""
         return any_operator_in_list(precedence_level) ^ combine
-    
-    # print precedence_levels[0]
+
     parser = value_parser * op_parser(precedence_levels[0])
-    # print parser
 
     for precedence_level in precedence_levels[1:]:
         # print precedence_level
         parser = parser * op_parser(precedence_level)
-    
-    print parser
+
     return parser
 
 def aexp():
-    print "calling aexp"
-    print aexp_precedence_levels
     return precedence(aexp_term(), aexp_precedence_levels, process_binop)
 
 #------------------parsing boolean expression--------------------
@@ -149,7 +144,7 @@ def while_stmt():
 
     return key_word("while") + bexp() + \
            key_word("do") + Lazy(stmt_list) + \
-           key_word("end") + process
+           key_word("end") ^ process
 
 def stmt():
     return assign_stmt() | if_stmt() | while_stmt()
