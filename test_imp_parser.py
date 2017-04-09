@@ -13,6 +13,7 @@ def test_imp_parser(chars):
 
 
 if __name__ == '__main__':
-    file_name = sys.argv[1]
-    with open(file_name, 'r') as f:
-        test_imp_parser(f.read())
+    # file_name = sys.argv[1]
+    # with open(file_name, 'r') as f:
+    #     test_imp_parser(f.read())
+    test_imp_parser('1+2*3')

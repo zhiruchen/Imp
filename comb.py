@@ -46,6 +46,9 @@ class Reserved(Parser):
         else:
             return None
 
+    def __repr__(self):
+        return "Reserved({},{})".format(self.value, self.tag)
+
 
 class Tag(Parser):
     def __init__(self, tag):
@@ -56,6 +59,9 @@ class Tag(Parser):
             return Result(tokens[pos][0], pos + 1)
         else:
             return None
+
+    def __repr__(self):
+        return "Tag({})".format(self.tag)
 
 
 class Concat(Parser):
@@ -69,11 +75,14 @@ class Concat(Parser):
     def __call__(self, tokens, pos):
         left_result = self.left(tokens, pos)
         if left_result:
-            right_result = self.right(tokens, pos)
+            right_result = self.right(tokens, left_result.pos)
             if right_result:
                 combined_value = (left_result.value, right_result.value)
                 return Result(combined_value, right_result.pos)
         return None
+
+    def __repr__(self):
+        return "Concat({},{})".format(self.left, self.right)
 
 
 class Alternate(Parser):
@@ -91,6 +100,9 @@ class Alternate(Parser):
         else:
             right_result = self.right(tokens, pos)
             return right_result
+
+    def __repr__(self):
+        return "Alternate({},{})".format(self.left, self.right)
 
 
 class Opt(Parser):
@@ -132,7 +144,9 @@ class Process(Parser):
         if result:
             result.value = self.func(result.value)
             return result
-
+    
+    def __repr__(self):
+        return "Process({},{})".format(self.parser, self.func.__name__)
 
 class Lazy(Parser):
     def __init__(self, parser_func):
@@ -144,6 +158,9 @@ class Lazy(Parser):
             self.parser = self.parser_func()
 
         return self.parser(tokens, pos)
+
+    def __repr__(self):
+        return "Lazy({})".format(self.parser_func.__name__)
 
 
 class Phrase(Parser):
@@ -179,3 +196,6 @@ class Exp(Parser):
             if next_result:
                 result = next_result
         return result
+    
+    def __repr__(self):
+        return "Exp({},{})".format(self.parser, self.separator)
